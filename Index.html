@@ -1,0 +1,998 @@
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BATAKO TB BERKAH UTAMA - Premium Industrial Dashboard</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- Google Fonts Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0f172a; }
+        ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f59e0b; }
+    </style>
+</head>
+<body class="bg-[#0b0f19] text-slate-200 antialiased selection:bg-amber-500 selection:text-slate-950">
+
+    <!-- HEADER TOKO (THEMA INDUSTRIAL GAGAH) -->
+    <header class="bg-[#111827]/90 backdrop-blur-md sticky top-0 z-40 border-b border-slate-800/80 shadow-xl">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-4">
+                <!-- BINGKAI LOGO PREMIUM -->
+                <div class="w-14 h-14 bg-slate-900 border-2 border-amber-500/40 rounded-xl p-0.5 flex items-center justify-center shadow-lg overflow-hidden">
+                    <img src="1000313534.webp" alt="Logo TB Berkah Utama" onerror="this.onerror=null; this.src='https://api.dicebear.com/7.x/initials/svg?seed=BU&backgroundColor=1e293b&textColor=white';" class="w-full h-full object-cover rounded-lg">
+                </div>
+                <div>
+                    <h1 class="text-xl font-black tracking-wider bg-gradient-to-r from-amber-400 via-slate-100 to-slate-400 bg-clip-text text-transparent uppercase">TB BERKAH UTAMA</h1>
+                    <p class="text-[10px] text-amber-500/80 font-bold tracking-widest uppercase">Heavy Construction & Batako Industry Management</p>
+                </div>
+            </div>
+            <div class="flex flex-wrap items-center justify-center gap-3 text-xs font-semibold">
+                <button onclick="resetDataAplikasi()" class="bg-rose-950/40 hover:bg-rose-900/60 border border-rose-800/50 text-rose-300 px-3.5 py-2 rounded-xl text-[10px] tracking-wide uppercase transition cursor-pointer">⚠️ Kosongkan Database</button>
+                <span class="bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl flex items-center gap-1.5 text-slate-400 shadow-sm">📅 <span id="current-date">24 Juni 2026</span></span>
+                <span class="bg-slate-900 border border-slate-800 px-3.5 py-2 rounded-xl flex items-center gap-1.5 text-amber-400 font-mono font-bold shadow-sm">⏰ <span id="current-time">00:00:00</span></span>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+
+        <!-- RINGKASAN PANEL (METRICS UTAMA) -->
+        <section class="space-y-4">
+            <div class="flex items-center gap-2.5">
+                <div class="h-5 w-1.5 bg-amber-500 rounded-full shadow-lg shadow-amber-500/50"></div>
+                <h2 class="text-xs font-black text-amber-500 uppercase tracking-widest">Kondisi Finansial & Inventori Terkini</h2>
+            </div>
+            
+            <div class="grid grid-cols-2 lg:grid-cols-6 gap-4">
+                <!-- TOTAL MODAL BAHAN (EDITABLE LANGSUNG DI ATAS) -->
+                <div class="bg-[#111c30] p-4 rounded-2xl border border-blue-900/40 shadow-md flex flex-col justify-between transition hover:border-blue-500/40">
+                    <span class="text-[10px] text-blue-400 font-black uppercase tracking-wider">Total Modal Bahan</span>
+                    <div class="mt-4">
+                        <input type="number" id="input-modal-global" value="0" oninput="simpanKeLocalStorage(); hitungMekanismeOtomatis();" class="font-extrabold text-slate-100 text-lg w-full focus:outline-hidden bg-transparent border-b border-blue-500/40 focus:border-blue-500 rounded transition-all font-mono" placeholder="Ketik Modal...">
+                        <p class="text-[9px] text-blue-400/60 mt-1 font-medium">Bisa dirubah manual di sini</p>
+                    </div>
+                </div>
+                <!-- TOTAL OMZET -->
+                <div class="bg-[#111e25] p-4 rounded-2xl border border-emerald-900/40 shadow-md flex flex-col justify-between transition hover:border-emerald-500/40">
+                    <span class="text-[10px] text-emerald-400 font-black uppercase tracking-wider">Total Omzet</span>
+                    <div class="mt-4">
+                        <p id="txt-laba-status" class="text-lg font-black text-slate-100">Rp0</p>
+                        <span id="badge-status-modal" class="inline-block text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800/40 px-2 py-0.5 rounded mt-1">PROFIT AKTIF</span>
+                    </div>
+                </div>
+                <!-- STOK CETAK -->
+                <div class="bg-[#18181b] p-4 rounded-2xl border border-zinc-800 shadow-md flex flex-col justify-between transition hover:border-amber-500/30">
+                    <span class="text-[10px] text-zinc-400 font-black uppercase tracking-wider">Stok Cetak</span>
+                    <div class="mt-4">
+                        <p id="txt-stok-masuk" class="text-2xl font-black text-slate-100 tracking-tight">0</p>
+                        <span class="text-[9px] font-bold text-amber-500/80 tracking-wider">BIJI BATAKO</span>
+                    </div>
+                </div>
+                <!-- STOK TERJUAL -->
+                <div class="bg-[#18181b] p-4 rounded-2xl border border-zinc-800 shadow-md flex flex-col justify-between transition hover:border-amber-500/30">
+                    <span class="text-[10px] text-zinc-400 font-black uppercase tracking-wider">Stok Keluar</span>
+                    <div class="mt-4">
+                        <p id="txt-stok-terjual" class="text-2xl font-black text-slate-100 tracking-tight">0</p>
+                        <span class="text-[9px] font-bold text-rose-400 tracking-wider">BIJI TERJUAL</span>
+                    </div>
+                </div>
+                <!-- SISA STOK -->
+                <div class="bg-[#1e1b4b]/40 p-4 rounded-2xl border border-indigo-900/40 shadow-md flex flex-col justify-between transition hover:border-indigo-500/40">
+                    <span class="text-[10px] text-indigo-400 font-black uppercase tracking-wider">Sisa Gudang</span>
+                    <div class="mt-4">
+                        <p id="txt-sisa-stok" class="text-2xl font-black text-indigo-300 tracking-tight">0</p>
+                        <span class="text-[9px] font-bold text-indigo-400 tracking-wider">READY STOK</span>
+                    </div>
+                </div>
+                <!-- LABA BERSIH -->
+                <div class="bg-[#111c30] p-4 rounded-2xl border border-amber-500/20 shadow-md flex flex-col justify-between transition hover:border-amber-500/40">
+                    <span class="text-[10px] text-amber-400 font-black uppercase tracking-wider">Laba Bersih</span>
+                    <div class="mt-4">
+                        <p id="txt-laba-bersih" class="text-lg font-black text-amber-400">Rp0</p>
+                        <span id="txt-persentase-laba" class="text-[10px] font-bold text-slate-400">(0.00%)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- INPUT MODAL BAHAN BAKU -->
+        <section class="bg-[#111827] p-6 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+            <h3 class="text-sm font-black text-slate-100 tracking-wider uppercase border-b border-slate-800 pb-3 flex items-center gap-2"><span>🧱</span> 1 & 2. Pengeluaran / Pembelian Bahan Baku</h3>
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- FORM INPUT -->
+                <div class="space-y-4 bg-slate-950/40 p-4 rounded-xl border border-slate-800/80">
+                    <h4 class="text-xs font-black text-blue-400 uppercase tracking-wider">Form Beli Bahan</h4>
+                    <div>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Pilih Kategori Bahan</label>
+                        <select id="inp-modal-kategori" onchange="updateDefaultHargaBahan()" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:border-blue-500">
+                            <option value="Semen">Semen</option>
+                            <option value="Abu">Abu</option>
+                            <option value="Pasir">Pasir</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Harga / Biaya Pengeluaran (Rp)</label>
+                        <input type="number" id="inp-modal-harga" placeholder="Masukkan nominal..." class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-blue-500 font-mono">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Toko / Keterangan Pembelian</label>
+                        <input type="text" id="inp-modal-toko" placeholder="Contoh: Toko Berkah Mandiri" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Tanggal Transaksi</label>
+                        <input type="date" id="inp-modal-tanggal" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-blue-500">
+                    </div>
+                    <button onclick="simpanPembelianBahan()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black text-xs py-3 rounded-xl transition-all shadow-md cursor-pointer uppercase tracking-wider">Simpan & Tambah Modal</button>
+                </div>
+
+                <!-- LOG RIWAYAT PEMBELIAN BAHAN (SCROLLABLE) -->
+                <div class="lg:col-span-2 border border-slate-800 rounded-xl p-4 bg-slate-950/40 flex flex-col h-[380px]">
+                    <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider border-b border-slate-800 pb-2">Log Riwayat Pembelian Bahan Baku</h4>
+                    <div id="list-riwayat-bahan" class="overflow-y-auto flex-1 text-[11px] space-y-2.5 pt-3 pr-1">
+                        <!-- Riwayat Pembelian Masuk Sini -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- DASHBOARD GRID CONTENT -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+            <!-- 3. DATA KARYAWAN UTAMA -->
+            <section class="bg-[#111827] p-6 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+                <div class="border-b border-slate-800 pb-3 flex justify-between items-center">
+                    <h3 class="text-sm font-black text-slate-100 tracking-wider uppercase flex items-center gap-2"><span>👤</span> 3. Manajemen Tenaga Kerja</h3>
+                </div>
+                <div class="flex gap-2.5">
+                    <input type="text" id="inp-nama-karyawan" placeholder="Tulis nama lengkap karyawan..." class="flex-1 p-3 bg-slate-950/60 border border-slate-800 rounded-xl text-xs text-slate-100 placeholder:text-slate-600 focus:outline-hidden focus:border-amber-500 transition-all">
+                    <button onclick="tambahKaryawan()" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs px-5 rounded-xl transition-all shadow-md cursor-pointer flex items-center gap-1">➕ Karyawan</button>
+                </div>
+                <div class="overflow-x-auto border border-slate-800 rounded-xl max-h-[250px] overflow-y-auto">
+                    <table class="w-full text-left text-xs sticky top-0">
+                        <thead class="bg-slate-950 text-slate-400 font-bold border-b border-slate-800 z-10">
+                            <tr>
+                                <th class="p-3.5 text-center w-12">No</th>
+                                <th class="p-3.5">Nama</th>
+                                <th class="p-3.5 text-center">Total Produksi</th>
+                                <th class="p-3.5 text-right">Sisa Kasbon</th>
+                                <th class="p-3.5 text-center w-24">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-karyawan" class="divide-y divide-slate-800/60 text-slate-300 bg-slate-900/40"></tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- 4. PENCATATAN PRODUKSI & ESTIMASI GAJI -->
+            <section class="bg-[#111827] p-6 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+                <h3 class="text-sm font-black text-slate-100 tracking-wider uppercase border-b border-slate-800 pb-3 flex items-center gap-2"><span>🏗️</span> 4. Produksi Batako & Gaji</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[11px] font-black text-amber-500/80 uppercase tracking-wider mb-1.5">Pilih Karyawan</label>
+                            <select id="select-setor-karyawan" onchange="loadRiwayatCetakKaryawan()" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-200 focus:outline-hidden focus:border-amber-500"></select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div>
+                                <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Hasil (Biji)</label>
+                                <input type="number" id="inp-setor-qty" placeholder="500" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-amber-500">
+                            </div>
+                            <div>
+                                <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Gaji/Biji (Rp)</label>
+                                <input type="number" id="inp-setor-tarif" value="1000" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-amber-500">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Tanggal Produksi</label>
+                            <input type="date" id="inp-setor-tanggal" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100">
+                        </div>
+                        <button onclick="simpanSetorCetak()" class="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-xs py-3 rounded-xl transition-all shadow-md cursor-pointer uppercase tracking-wider">Simpan Laporan Produksi</button>
+                    </div>
+                    
+                    <div class="border border-slate-800 rounded-xl p-4 bg-slate-950/40 flex flex-col justify-between h-[300px]">
+                        <div class="flex flex-col flex-1 min-h-0">
+                            <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider border-b border-slate-800 pb-2">Log Produksi: <span id="lbl-cetak-karyawan" class="text-amber-400">...</span></h4>
+                            <!-- SCROLLABLE CONTAINER -->
+                            <div id="list-sub-cetak-kalimat" class="overflow-y-auto flex-1 text-[11px] space-y-2.5 pt-2 pr-1"></div>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-300 flex flex-col gap-1 pt-2 border-t border-slate-800 mt-2">
+                            <div class="flex justify-between"><span>Akumulasi Cetak:</span><span id="lbl-total-cetak-karyawan" class="text-amber-400 font-black">0 Biji</span></div>
+                            <div class="flex justify-between"><span>Hak Gaji Karyawan:</span><span id="lbl-total-gaji-karyawan" class="text-emerald-400 font-black">Rp0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. TRANSAKSI PENJUALAN BATAKO -->
+            <section class="bg-[#111827] p-6 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+                <h3 class="text-sm font-black text-slate-100 tracking-wider uppercase border-b border-slate-800 pb-3 flex items-center gap-2"><span>🛍️</span> 5. Distribusi / Penjualan Keluar</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Kuantitas Jual (Biji)</label>
+                            <input type="number" id="inp-jual-qty" placeholder="1000" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Harga Per Biji (Rp)</label>
+                            <input type="number" id="inp-jual-harga" value="2400" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-amber-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Tanggal Distribusi</label>
+                            <input type="date" id="inp-jual-tanggal" class="w-full p-3 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100">
+                        </div>
+                        <button onclick="simpanPenjualan()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-slate-100 font-black text-xs py-3 rounded-xl transition-all shadow-md cursor-pointer uppercase tracking-wider">Validasi Jual Keluar</button>
+                    </div>
+                    
+                    <div class="border border-slate-800 rounded-xl p-4 bg-slate-950/40 flex flex-col justify-between h-[300px]">
+                        <div class="flex flex-col flex-1 min-h-0">
+                            <h4 class="text-xs font-black text-slate-400 uppercase tracking-wider border-b border-slate-800 pb-2">Log Batako Keluar</h4>
+                            <!-- SCROLLABLE CONTAINER -->
+                            <div id="list-sub-jual-kalimat" class="overflow-y-auto flex-1 text-[11px] space-y-2.5 pt-2 pr-1"></div>
+                        </div>
+                        <div class="text-[11px] font-bold text-slate-300 flex flex-col gap-1 pt-2 border-t border-slate-800 mt-2">
+                            <div class="flex justify-between"><span>Total Batako Keluar:</span><span id="lbl-total-jual-qty" class="text-slate-100 font-black">0 Biji</span></div>
+                            <div class="flex justify-between text-sm"><span>Total Omzet Masuk:</span><span id="lbl-total-jual-idr" class="text-emerald-400 font-black">Rp0</span></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 6. BUKU KASBON KARYAWAN -->
+            <section class="bg-[#111827] p-6 rounded-2xl border border-slate-800 shadow-xl space-y-5">
+                <h3 class="text-sm font-black text-slate-100 tracking-wider uppercase border-b border-slate-800 pb-3 flex items-center gap-2"><span>💳</span> 6. Finansial & Kasbon Mandiri</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                    <div>
+                        <label class="block text-[11px] font-black text-slate-400 uppercase tracking-wider mb-1.5">Pilih Akun Karyawan</label>
+                        <div id="box-pilih-kasbon-list" class="border border-slate-200 rounded-xl overflow-y-auto h-[200px] divide-y divide-slate-800/80 bg-slate-950/60 shadow-inner"></div>
+                    </div>
+                    
+                    <div class="border border-slate-800 rounded-xl p-4 bg-slate-950/40 flex flex-col justify-between space-y-4 text-xs h-[200px]">
+                        <div class="space-y-2 overflow-y-auto pr-1">
+                            <h4 class="font-black text-slate-300">Akun: <span id="lbl-kasbon-nama" class="text-amber-400">...</span></h4>
+                            <div class="grid grid-cols-2 gap-2 border-y border-slate-800 py-2">
+                                <div>
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Total Kasbon</p>
+                                    <p id="lbl-kasbon-total" class="font-bold text-slate-200">Rp0</p>
+                                </div>
+                                <div>
+                                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-wider">Sisa Hutang</p>
+                                    <p id="lbl-kasbon-sisa" class="font-bold text-rose-600">Rp0</p>
+                                </div>
+                            </div>
+                            <div class="space-y-2">
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400">Nominal Uang (Gunakan minus '-' jika bon baru)</label>
+                                    <input type="number" id="inp-kasbon-nominal" placeholder="-100000" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100 focus:border-amber-500">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] font-bold text-slate-400">Tanggal Buku</label>
+                                    <input type="date" id="inp-kasbon-tanggal" class="w-full p-2 bg-slate-950 border border-slate-800 rounded-xl text-xs text-slate-100">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1 border-t border-slate-800/60">
+                            <button onclick="prosesCicilanManual(false)" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-black text-[11px] py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider">Simpan Buku</button>
+                            <button onclick="prosesCicilanManual(true)" class="bg-indigo-600 hover:bg-indigo-700 text-slate-100 font-black text-[11px] py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider">Set Lunas</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- MUTASI KASBON SCROLLABLE -->
+                <div class="border border-slate-800 rounded-xl p-4 text-[11px] space-y-2.5 bg-slate-950/20">
+                    <h4 class="font-black text-slate-400 uppercase tracking-wider flex justify-between border-b border-slate-800 pb-2">
+                        <span>Mutasi Historis Kasbon</span>
+                        <span id="lbl-cicilan-histori-nama" class="text-amber-400">...</span>
+                    </h4>
+                    <!-- SCROLLABLE CONTAINER -->
+                    <div id="list-sub-kasbon-kalimat" class="overflow-y-auto h-[120px] space-y-2 pr-1"></div>
+                </div>
+            </section>
+        </div>
+
+        <!-- 7. SEGMEN TOMBOL POPUP KRONOLOGIS RIWAYAT LAPORAN (FITUR BARU) -->
+        <section class="bg-[#111827] p-6 rounded-2xl border border-slate-800 shadow-xl text-center space-y-4">
+            <h3 class="text-sm font-black text-slate-100 tracking-wider uppercase flex items-center justify-center gap-2">
+                <span>📋</span> 7. Riwayat Laporan Kronologis Aktivitas Pabrik
+            </h3>
+            <p class="text-xs text-slate-400 max-w-md mx-auto">
+                Kelola dan pantau seluruh sirkulasi data keluar masuk, laporan cetakan, bon karyawan, dan belanja material dalam format satu laporan waktu yang teratur.
+            </p>
+            <div class="flex justify-center gap-3">
+                <button onclick="bukaModalLaporan()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs px-8 py-3.5 rounded-xl shadow-lg transition-all cursor-pointer uppercase tracking-widest">
+                    👁️ Buka Riwayat Laporan Terpadu
+                </button>
+                <button onclick="eksporKeGoogleSheetsCSV()" class="bg-emerald-600/10 hover:bg-emerald-600/20 border border-emerald-500/30 text-emerald-400 font-bold text-xs px-6 py-3.5 rounded-xl transition cursor-pointer flex items-center gap-1.5 uppercase">
+                    <span>📊</span> Unduh Spreadsheet (.csv)
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- POP-UP FULL-SCREEN LAPORAN JURNAL TERPADU -->
+    <div id="modal-laporan-global" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-[#111827] border border-slate-800 w-full max-w-4xl rounded-2xl shadow-2xl flex flex-col max-h-[85vh]">
+            <!-- Header Modal -->
+            <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-950/40 rounded-t-2xl">
+                <div>
+                    <h3 class="text-base font-black text-slate-100 uppercase tracking-wide">📋 Riwayat Aktivitas & Transaksi Pabrik</h3>
+                    <p class="text-[11px] text-slate-500 mt-0.5">Urutan kronologis laporan dari yang terbaru ke terlama</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <button onclick="eksporKeGoogleSheetsCSV()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs px-4 py-2 rounded-xl transition cursor-pointer flex items-center gap-1.5 uppercase">
+                        <span>📊</span> Ekpor Spreadsheet
+                    </button>
+                    <button onclick="tutupModalLaporan()" class="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 font-bold text-sm p-1.5 rounded-lg transition cursor-pointer">
+                        ✕
+                    </button>
+                </div>
+            </div>
+            
+            <!-- SCROLLABLE LIST AREA -->
+            <div class="p-6 overflow-y-auto flex-1 bg-slate-950/20 space-y-3" id="timeline-laporan-global">
+                <!-- Semua riwayat gabungan masuk otomatis ke sini via JavaScript -->
+            </div>
+            
+            <!-- Footer Modal -->
+            <div class="p-4 border-t border-slate-800 text-right bg-slate-950/40 rounded-b-2xl">
+                <button onclick="tutupModalLaporan()" class="bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs px-5 py-2.5 rounded-xl transition cursor-pointer uppercase tracking-wider">Tutup Jendela</button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="text-center py-8 text-xs text-slate-600 font-bold tracking-wide uppercase border-t border-slate-900 bg-slate-950/40 mt-12">
+        &copy; 2026 Batako TB Berkah Utama - Industrial Enterprise Premium App.
+    </footer>
+
+    <!-- JAVASCRIPT SYSTEM ENGINE -->
+    <script>
+        // DATABASE INITIALLY EMPTY FOR MANUAL ENTRY FROM USER
+        let dataKaryawan = [];
+        let dataPenjualan = [];
+        let dataPembelianBahan = [];
+        let idKaryawanTerpilihCetak = null;
+        let idKaryawanTerpilihKasbon = null;
+
+        const defaultHargaBahan = {
+            "Semen": 1000000,
+            "Abu": 500000,
+            "Pasir": 750000
+        };
+
+        function fRupiah(v) { return "Rp " + Number(v).toLocaleString('id-ID'); }
+
+        function updateDefaultHargaBahan() {
+            let kat = document.getElementById('inp-modal-kategori').value;
+            document.getElementById('inp-modal-harga').value = defaultHargaBahan[kat] || 0;
+        }
+
+        // AMBIL & SETIAP KALI DI-REFRESH MELANJUTKAN DATA SEBELUMNYA
+        function muatDariLocalStorage() {
+            if (localStorage.getItem('tb_berkah_v6_karyawan')) {
+                dataKaryawan = JSON.parse(localStorage.getItem('tb_berkah_v6_karyawan'));
+                dataPenjualan = JSON.parse(localStorage.getItem('tb_berkah_v6_penjualan'));
+                dataPembelianBahan = JSON.parse(localStorage.getItem('tb_berkah_v6_bahan') || "[]");
+                if (localStorage.getItem('tb_berkah_v6_modal_override')) {
+                    document.getElementById('input-modal-global').value = localStorage.getItem('tb_berkah_v6_modal_override');
+                }
+            } else {
+                // Dimulai kosong total agar user mengisi manual sendiri
+                dataKaryawan = [];
+                dataPenjualan = [];
+                dataPembelianBahan = [];
+                document.getElementById('input-modal-global').value = 0;
+                simpanKeLocalStorage();
+            }
+
+            if(dataKaryawan.length > 0) {
+                idKaryawanTerpilihCetak = dataKaryawan[0].id;
+                idKaryawanTerpilihKasbon = dataKaryawan[0].id;
+            } else {
+                idKaryawanTerpilihCetak = null;
+                idKaryawanTerpilihKasbon = null;
+            }
+        }
+
+        function simpanKeLocalStorage() {
+            localStorage.setItem('tb_berkah_v6_karyawan', JSON.stringify(dataKaryawan));
+            localStorage.setItem('tb_berkah_v6_penjualan', JSON.stringify(dataPenjualan));
+            localStorage.setItem('tb_berkah_v6_bahan', JSON.stringify(dataPembelianBahan));
+            localStorage.setItem('tb_berkah_v6_modal_override', document.getElementById('input-modal-global').value);
+        }
+
+        function resetDataAplikasi() {
+            if(confirm("Apakah Anda yakin ingin mengosongkan semua data dan memulai pembukuan baru?")) {
+                localStorage.clear();
+                window.location.reload();
+            }
+        }
+
+        function setHariIni() {
+            const formatTgl = new Date().toISOString().split('T')[0];
+            document.getElementById('inp-modal-tanggal').value = formatTgl;
+            document.getElementById('inp-setor-tanggal').value = formatTgl;
+            document.getElementById('inp-jual-tanggal').value = formatTgl;
+            document.getElementById('inp-kasbon-tanggal').value = formatTgl;
+        }
+
+        function simpanPembelianBahan() {
+            let kategori = document.getElementById('inp-modal-kategori').value;
+            let harga = Number(document.getElementById('inp-modal-harga').value) || 0;
+            let toko = document.getElementById('inp-modal-toko').value.trim() || "Toko Umum";
+            let tanggal = document.getElementById('inp-modal-tanggal').value;
+
+            if(harga <= 0 || !tanggal) return alert("Lengkapi data pembelian dengan benar!");
+
+            dataPembelianBahan.unshift({
+                id: Date.now(),
+                tanggal: tanggal,
+                kategori: kategori,
+                harga: harga,
+                toko: toko
+            });
+
+            // Otomatis update Modal Global terakumulasi dari total pembelian bahan jika modal masih 0
+            let modalSistemSaatIni = Number(document.getElementById('input-modal-global').value) || 0;
+            document.getElementById('input-modal-global').value = modalSistemSaatIni + harga;
+
+            document.getElementById('inp-modal-toko').value = "";
+            simpanKeLocalStorage();
+            hitungMekanismeOtomatis();
+        }
+
+        function hapusPembelianBahan(id) {
+            if(confirm("Hapus catatan pembelian bahan ini?")) {
+                let item = dataPembelianBahan.find(b => b.id == id);
+                if (item) {
+                    let modalSistemSaatIni = Number(document.getElementById('input-modal-global').value) || 0;
+                    document.getElementById('input-modal-global').value = Math.max(0, modalSistemSaatIni - item.harga);
+                }
+                dataPembelianBahan = dataPembelianBahan.filter(b => b.id != id);
+                simpanKeLocalStorage();
+                hitungMekanismeOtomatis();
+            }
+        }
+
+        function renderRiwayatBahan() {
+            let container = document.getElementById('list-riwayat-bahan');
+            container.innerHTML = "";
+            let totalModal = 0;
+
+            dataPembelianBahan.forEach(b => {
+                totalModal += b.harga;
+                container.innerHTML += `
+                    <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-xl flex justify-between items-start group">
+                        <p class="text-slate-300 leading-relaxed pr-2">
+                            📅 <span class="text-slate-500 font-mono font-bold">${b.tanggal}</span> &rarr; 
+                            Membeli bahan <span class="text-blue-400 font-black">${b.kategori}</span> senilai 
+                            <span class="text-emerald-400 font-bold">${fRupiah(b.harga)}</span> di <span class="text-slate-200 font-semibold">${b.toko}</span>.
+                        </p>
+                        <button onclick="hapusPembelianBahan(${b.id})" class="text-rose-400 font-bold px-1 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100 cursor-pointer">🗑️</button>
+                    </div>
+                `;
+            });
+
+            if(dataPembelianBahan.length === 0) {
+                container.innerHTML = "<p class='text-slate-600 italic p-2 text-center'>Belum ada transaksi pembelian bahan baku.</p>";
+            }
+            return totalModal;
+        }
+
+        function hitungMekanismeOtomatis() {
+            renderRiwayatBahan();
+            
+            // Mengambil modal global dari input editable di bagian atas
+            let modalGlobalValue = Number(document.getElementById('input-modal-global').value) || 0;
+
+            dataKaryawan.forEach(k => {
+                k.totalCetak = k.riwayatCetak.reduce((sum, item) => sum + item.qty, 0);
+            });
+
+            let totalStokMasuk = dataKaryawan.reduce((sum, k) => sum + k.totalCetak, 0);
+            let totalStokTerjual = dataPenjualan.reduce((sum, j) => sum + j.qty, 0);
+            let totalOmzet = dataPenjualan.reduce((sum, j) => sum + j.total, 0);
+            let sisaGudang = totalStokMasuk - totalStokTerjual;
+
+            let labaBersih = totalOmzet - modalGlobalValue;
+            let persentase = modalGlobalValue > 0 ? (labaBersih / modalGlobalValue) * 100 : 0;
+
+            document.getElementById('txt-laba-status').innerText = fRupiah(totalOmzet);
+            document.getElementById('txt-stok-masuk').innerText = totalStokMasuk.toLocaleString('id-ID');
+            document.getElementById('txt-stok-terjual').innerText = totalStokTerjual.toLocaleString('id-ID');
+            document.getElementById('txt-sisa-stok').innerText = sisaGudang.toLocaleString('id-ID');
+            document.getElementById('txt-laba-bersih').innerText = fRupiah(labaBersih);
+            document.getElementById('txt-persentase-laba').innerText = `(${persentase.toFixed(2)}%)`;
+
+            let badge = document.getElementById('badge-status-modal');
+            let txtLabaBersihEl = document.getElementById('txt-laba-bersih');
+            if(labaBersih >= 0) {
+                badge.innerText = "LABA > MODAL";
+                badge.className = "inline-block text-[9px] font-bold bg-emerald-950 text-emerald-400 border border-emerald-800/40 px-2 py-0.5 rounded mt-1";
+                txtLabaBersihEl.className = "text-lg font-black text-emerald-400";
+            } else {
+                badge.innerText = "LABA < MODAL";
+                badge.className = "inline-block text-[9px] font-bold bg-rose-950 text-rose-400 border border-rose-800/40 px-2 py-0.5 rounded mt-1";
+                txtLabaBersihEl.className = "text-lg font-black text-rose-400";
+            }
+
+            renderTabelKaryawan();
+            renderDropdownKaryawan();
+            renderRiwayatPenjualanSub(sisaGudang);
+            renderKasbonList();
+            loadRiwayatCetakKaryawan();
+            loadRiwayatKasbonKaryawan();
+        }
+
+        function renderTabelKaryawan() {
+            let tbody = document.getElementById('tbody-karyawan');
+            tbody.innerHTML = "";
+            dataKaryawan.forEach((k, idx) => {
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-800/30 transition-colors">
+                        <td class="p-3 text-center text-slate-500 font-bold">${idx + 1}</td>
+                        <td class="p-3 font-bold text-slate-200">${k.nama}</td>
+                        <td class="p-3 text-center font-bold text-amber-400">${k.totalCetak.toLocaleString('id-ID')} Biji</td>
+                        <td class="p-3 text-right font-mono font-bold text-rose-400">${fRupiah(k.kasbon)}</td>
+                        <td class="p-3 text-center space-x-2">
+                            <button onclick="pilihKaryawanAksi(${k.id})" class="text-amber-400 font-bold hover:text-amber-500 transition cursor-pointer">✏️ Pilih</button>
+                            <button onclick="hapusKaryawan(${k.id})" class="text-rose-400 font-bold hover:text-rose-500 transition cursor-pointer">🗑️</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            if(dataKaryawan.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-600 italic">Belum ada karyawan. Tambahkan di atas!</td></tr>`;
+            }
+        }
+
+        function tambahKaryawan() {
+            let nama = document.getElementById('inp-nama-karyawan').value.trim();
+            if(!nama) return;
+            let idBaru = Date.now();
+            dataKaryawan.push({ id: idBaru, nama: nama, totalCetak: 0, kasbon: 0, totalKasbonAwal: 0, riwayatCetak: [], riwayatCicilan: [] });
+            document.getElementById('inp-nama-karyawan').value = "";
+            idKaryawanTerpilihCetak = idBaru;
+            idKaryawanTerpilihKasbon = idBaru;
+            simpanKeLocalStorage();
+            hitungMekanismeOtomatis();
+        }
+
+        function hapusKaryawan(id) {
+            if(confirm("Hapus karyawan ini?")) {
+                dataKaryawan = dataKaryawan.filter(k => k.id !== id);
+                if(dataKaryawan.length > 0) {
+                    idKaryawanTerpilihCetak = dataKaryawan[0].id;
+                    idKaryawanTerpilihKasbon = dataKaryawan[0].id;
+                } else {
+                    idKaryawanTerpilihCetak = null;
+                    idKaryawanTerpilihKasbon = null;
+                }
+                simpanKeLocalStorage();
+                hitungMekanismeOtomatis();
+            }
+        }
+
+        function pilihKaryawanAksi(id) {
+            idKaryawanTerpilihCetak = id;
+            idKaryawanTerpilihKasbon = id;
+            hitungMekanismeOtomatis();
+        }
+
+        function renderDropdownKaryawan() {
+            let select = document.getElementById('select-setor-karyawan');
+            select.innerHTML = "";
+            if(dataKaryawan.length === 0) {
+                select.innerHTML = `<option value="">-- Tambah Karyawan Terlebih Dahulu --</option>`;
+                return;
+            }
+            if(!idKaryawanTerpilihCetak && dataKaryawan.length > 0) {
+                idKaryawanTerpilihCetak = dataKaryawan[0].id;
+            }
+            dataKaryawan.forEach(k => {
+                select.innerHTML += `<option value="${k.id}" ${k.id == idKaryawanTerpilihCetak ? 'selected' : ''}>${k.nama}</option>`;
+            });
+        }
+
+        function loadRiwayatCetakKaryawan() {
+            let selectVal = document.getElementById('select-setor-karyawan').value;
+            if(selectVal) idKaryawanTerpilihCetak = selectVal;
+            
+            let karyawan = dataKaryawan.find(k => k.id == idKaryawanTerpilihCetak);
+            
+            let totalStokMasuk = dataKaryawan.reduce((sum, k) => sum + k.totalCetak, 0);
+            let totalStokTerjual = dataPenjualan.reduce((sum, j) => sum + j.qty, 0);
+            let sisaGudangReal = totalStokMasuk - totalStokTerjual;
+
+            if(!karyawan) {
+                document.getElementById('lbl-cetak-karyawan').innerText = "...";
+                document.getElementById('list-sub-cetak-kalimat').innerHTML = "<p class='text-slate-600 italic p-2 text-center'>Belum ada data.</p>";
+                document.getElementById('lbl-total-cetak-karyawan').innerText = "0 Biji";
+                document.getElementById('lbl-total-gaji-karyawan').innerText = "Rp0";
+                return;
+            }
+            
+            document.getElementById('lbl-cetak-karyawan').innerText = karyawan.nama;
+            let container = document.getElementById('list-sub-cetak-kalimat');
+            container.innerHTML = "";
+            
+            let akumulasiGaji = 0;
+            karyawan.riwayatCetak.forEach(c => {
+                let tarif = c.tarif || 1000;
+                let totalGaji = c.totalGaji || (c.qty * tarif);
+                akumulasiGaji += totalGaji;
+
+                container.innerHTML += `
+                    <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-xl flex justify-between items-start group">
+                        <p class="text-slate-300 leading-relaxed pr-2">
+                            📅 <span class="text-slate-500 font-mono font-bold">${c.tanggal}</span> &rarr; 
+                            <span class="text-amber-400 font-bold">${karyawan.nama}</span> menyetor laporan bikin stok 
+                            <span class="text-amber-400 font-black">${c.qty.toLocaleString('id-ID')} biji</span> batako, sisa gudang sekarang 
+                            <span class="text-indigo-400 font-bold">${sisaGudangReal.toLocaleString('id-ID')} biji</span>. Upah: 
+                            <span class="text-emerald-400 font-bold">${fRupiah(totalGaji)}</span>
+                        </p>
+                        <button onclick="hapusRiwayatCetak(${karyawan.id}, ${c.id})" class="text-rose-400 font-bold px-1 hover:text-rose-500 transition-all opacity-0 group-hover:opacity-100 cursor-pointer">🗑️</button>
+                    </div>
+                `;
+            });
+            if(karyawan.riwayatCetak.length === 0) {
+                container.innerHTML = "<p class='text-slate-600 italic p-2 text-center'>Belum ada log produksi batako.</p>";
+            }
+            document.getElementById('lbl-total-cetak-karyawan').innerText = karyawan.totalCetak.toLocaleString('id-ID') + " Biji";
+            document.getElementById('lbl-total-gaji-karyawan').innerText = fRupiah(akumulasiGaji);
+        }
+
+        function simpanSetorCetak() {
+            let id = document.getElementById('select-setor-karyawan').value || idKaryawanTerpilihCetak;
+            let qty = Number(document.getElementById('inp-setor-qty').value) || 0;
+            let tarif = Number(document.getElementById('inp-setor-tarif').value) || 0;
+            let tgl = document.getElementById('inp-setor-tanggal').value;
+
+            if(!id || qty <= 0 || tarif <= 0 || !tgl) return alert("Pilih karyawan dan lengkapi data cetakan!");
+            let karyawan = dataKaryawan.find(k => k.id == id);
+            
+            karyawan.riwayatCetak.unshift({ id: Date.now(), tanggal: tgl, qty: qty, tarif: tarif, totalGaji: qty * tarif });
+            document.getElementById('inp-setor-qty').value = "";
+            simpanKeLocalStorage();
+            hitungMekanismeOtomatis();
+        }
+
+        function hapusRiwayatCetak(karyawanId, cetakId) {
+            if(confirm("Hapus riwayat cetak ini?")) {
+                let karyawan = dataKaryawan.find(k => k.id == karyawanId);
+                karyawan.riwayatCetak = karyawan.riwayatCetak.filter(c => c.id != cetakId);
+                simpanKeLocalStorage();
+                hitungMekanismeOtomatis();
+            }
+        }
+
+        function renderRiwayatPenjualanSub(sisaGudang) {
+            let container = document.getElementById('list-sub-jual-kalimat');
+            container.innerHTML = "";
+            let tQty = 0;
+            let tIdr = 0;
+            dataPenjualan.forEach(j => {
+                tQty += j.qty;
+                tIdr += j.total;
+                
+                container.innerHTML += `
+                    <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-xl flex justify-between items-start group">
+                        <p class="text-slate-300 leading-relaxed">
+                            📅 <span class="text-slate-500 font-mono font-bold">${j.tanggal}</span> &rarr; Batako keluar 
+                            <span class="text-rose-400 font-black">${j.qty.toLocaleString('id-ID')} biji</span>. Nilai: 
+                            <span class="text-emerald-400 font-bold">${fRupiah(j.total)}</span>
+                        </p>
+                        <button onclick="hapusRiwayatPenjualan(${j.id})" class="text-rose-400 font-bold opacity-0 group-hover:opacity-100 transition-all ml-2 cursor-pointer">🗑️</button>
+                    </div>
+                `;
+            });
+            if(dataPenjualan.length === 0) {
+                container.innerHTML = "<p class='text-slate-600 italic p-2 text-center'>Belum ada data distribusi keluar.</p>";
+            }
+            document.getElementById('lbl-total-jual-qty').innerText = tQty.toLocaleString('id-ID') + " Biji";
+            document.getElementById('lbl-total-jual-idr').innerText = fRupiah(tIdr);
+        }
+
+        function simpanPenjualan() {
+            let qty = Number(document.getElementById('inp-jual-qty').value) || 0;
+            let harga = Number(document.getElementById('inp-jual-harga').value) || 0;
+            let tgl = document.getElementById('inp-jual-tanggal').value;
+
+            if(qty <= 0 || harga <= 0 || !tgl) return alert("Lengkapi data penjualan keluar batako!");
+            dataPenjualan.unshift({ id: Date.now(), tanggal: tgl, qty: qty, harga: harga, total: qty * harga });
+            document.getElementById('inp-jual-qty').value = "";
+            simpanKeLocalStorage();
+            hitungMekanismeOtomatis();
+        }
+
+        function hapusRiwayatPenjualan(id) {
+            if(confirm("Hapus riwayat penjualan ini?")) {
+                dataPenjualan = dataPenjualan.filter(j => j.id != id);
+                simpanKeLocalStorage();
+                hitungMekanismeOtomatis();
+            }
+        }
+
+        function renderKasbonList() {
+            let box = document.getElementById('box-pilih-kasbon-list');
+            box.innerHTML = "";
+            if(dataKaryawan.length === 0) {
+                box.innerHTML = "<p class='text-slate-600 italic p-3 text-xs text-center'>Belum ada karyawan.</p>";
+                return;
+            }
+            if(!idKaryawanTerpilihKasbon && dataKaryawan.length > 0) {
+                idKaryawanTerpilihKasbon = dataKaryawan[0].id;
+            }
+            dataKaryawan.forEach(k => {
+                let aktifClass = k.id == idKaryawanTerpilihKasbon ? "bg-amber-500/10 border-l-4 border-amber-500 font-bold text-amber-400" : "";
+                box.innerHTML += `
+                    <div onclick="pilihKaryawanKasbon(${k.id})" class="p-3.5 flex justify-between items-center cursor-pointer hover:bg-slate-800/40 transition-all ${aktifClass}">
+                        <span class="font-semibold">${k.nama}</span>
+                        <span class="font-mono text-rose-400">${fRupiah(k.kasbon)}</span>
+                    </div>
+                `;
+            });
+        }
+
+        function pilihKaryawanKasbon(id) {
+            idKaryawanTerpilihKasbon = id;
+            hitungMekanismeOtomatis();
+        }
+
+        function loadRiwayatKasbonKaryawan() {
+            let karyawan = dataKaryawan.find(k => k.id == idKaryawanTerpilihKasbon);
+            if(!karyawan) {
+                document.getElementById('lbl-kasbon-nama').innerText = "...";
+                document.getElementById('lbl-cicilan-histori-nama').innerText = "...";
+                document.getElementById('list-sub-kasbon-kalimat').innerHTML = "<p class='text-slate-600 italic p-2 text-center'>Pilih karyawan terlebih dahulu.</p>";
+                document.getElementById('lbl-kasbon-total').innerText = "Rp0";
+                document.getElementById('lbl-kasbon-sisa').innerText = "Rp0";
+                return;
+            }
+
+            document.getElementById('lbl-kasbon-nama').innerText = karyawan.nama;
+            document.getElementById('lbl-cicilan-histori-nama').innerText = karyawan.nama;
+            
+            let kalkulasiTotalPinjaman = karyawan.riwayatCicilan
+                .filter(c => c.ket === "Bon Baru")
+                .reduce((a, b) => a + Math.abs(b.cicilan), 0);
+            karyawan.totalKasbonAwal = kalkulasiTotalPinjaman;
+
+            document.getElementById('lbl-kasbon-total').innerText = fRupiah(karyawan.totalKasbonAwal);
+            document.getElementById('lbl-kasbon-sisa').innerText = fRupiah(karyawan.kasbon);
+
+            let container = document.getElementById('list-sub-kasbon-kalimat');
+            container.innerHTML = "";
+            
+            karyawan.riwayatCicilan.forEach(cb => {
+                let kataAksi = "";
+                if(cb.ket === "Bon Baru") {
+                    kataAksi = `melakukan <span class="text-rose-400 font-bold">kasbon baru</span> sebesar <span class="text-rose-400 font-black">${fRupiah(Math.abs(cb.cicilan))}</span>`;
+                } else if(cb.ket === "Cicilan") {
+                    kataAksi = `membayar <span class="text-indigo-400 font-bold">cicilan kasbon</span> sebesar <span class="text-indigo-400 font-black">${fRupiah(Math.abs(cb.cicilan))}</span>`;
+                } else if(cb.ket === "LUNAS") {
+                    kataAksi = `melakukan pelunasan total sebesar <span class="text-emerald-400 font-black">${fRupiah(Math.abs(cb.cicilan))}</span>`;
+                }
+
+                container.innerHTML += `
+                    <div class="p-2.5 bg-slate-900 border border-slate-800 rounded-xl flex justify-between items-start group">
+                        <p class="text-slate-300 leading-relaxed">
+                            📅 <span class="text-slate-500 font-mono font-bold">${cb.tanggal}</span> &rarr; 
+                            <span class="text-amber-400 font-bold">${karyawan.nama}</span> ${kataAksi}.
+                        </p>
+                        <button onclick="hapusRiwayatCicilan(${karyawan.id}, ${cb.id})" class="text-rose-400 font-bold opacity-0 group-hover:opacity-100 transition-all ml-2 cursor-pointer">🗑️</button>
+                    </div>
+                `;
+            });
+            if(karyawan.riwayatCicilan.length === 0) {
+                container.innerHTML = "<p class='text-slate-600 italic p-2 text-center'>Belum ada mutasi cicilan.</p>";
+            }
+        }
+
+        function prosesCicilanManual(isLunas) {
+            let karyawan = dataKaryawan.find(k => k.id == idKaryawanTerpilihKasbon);
+            if(!karyawan) return alert("Pilih karyawan terlebih dahulu!");
+
+            let tgl = document.getElementById('inp-kasbon-tanggal').value;
+            if(!tgl) return alert("Tanggal tidak boleh kosong!");
+
+            if(isLunas) {
+                if(karyawan.kasbon <= 0) return alert("Kasbon sudah lunas!");
+                let nominalLunas = karyawan.kasbon;
+                karyawan.riwayatCicilan.unshift({ id: Date.now(), tanggal: tgl, cicilan: nominalLunas, sisa: 0, ket: "LUNAS" });
+                karyawan.kasbon = 0;
+            } else {
+                let nominal = Number(document.getElementById('inp-kasbon-nominal').value) || 0;
+                if(nominal === 0) return alert("Isi nominal kasbon/cicilan!");
+
+                if(nominal > 0) { 
+                    karyawan.kasbon -= nominal;
+                    karyawan.riwayatCicilan.unshift({ id: Date.now(), tanggal: tgl, cicilan: nominal, sisa: karyawan.kasbon, ket: "Cicilan" });
+                } else { 
+                    karyawan.kasbon += Math.abs(nominal);
+                    karyawan.riwayatCicilan.unshift({ id: Date.now(), tanggal: tgl, cicilan: nominal, sisa: karyawan.kasbon, ket: "Bon Baru" });
+                }
+                document.getElementById('inp-kasbon-nominal').value = "";
+            }
+            simpanKeLocalStorage();
+            hitungMekanismeOtomatis();
+        }
+
+        function hapusRiwayatCicilan(karyawanId, cicilanId) {
+            if(confirm("Hapus catatan finansial ini?")) {
+                let karyawan = dataKaryawan.find(k => k.id == karyawanId);
+                let item = karyawan.riwayatCicilan.find(c => c.id == cicilanId);
+
+                if(item.ket === "Cicilan" || item.ket === "LUNAS") {
+                    karyawan.kasbon += Number(item.cicilan);
+                } else if(item.ket === "Bon Baru") {
+                    karyawan.kasbon -= Math.abs(Number(item.cicilan));
+                }
+
+                karyawan.riwayatCicilan = karyawan.riwayatCicilan.filter(c => c.id != cicilanId);
+                simpanKeLocalStorage();
+                hitungMekanismeOtomatis();
+            }
+        }
+
+        // POP-UP WINDOWS
+        function bukaModalLaporan() {
+            renderRiwayatLaporanGlobal();
+            document.getElementById('modal-laporan-global').classList.remove('hidden');
+        }
+
+        function tutupModalLaporan() {
+            document.getElementById('modal-laporan-global').classList.add('hidden');
+        }
+
+        // GABUNG KAN SEMUA TRANSAKSI SEBAGAI LIST CHRONOLOGIS (TIMELINE)
+        function renderRiwayatLaporanGlobal() {
+            let listLaporan = [];
+
+            // 1. Pembelian Bahan Baku
+            dataPembelianBahan.forEach(b => {
+                listLaporan.push({
+                    tanggal: b.tanggal,
+                    html: `<div class="p-3 bg-blue-950/40 border-l-4 border-blue-500 rounded-r-xl text-xs flex justify-between items-center">
+                            <span>📅 <b class="font-mono text-slate-400">${b.tanggal}</b> &nbsp;|&nbsp; <span class="bg-blue-900 text-blue-200 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase">MODAL BAHAN</span> &rarr; Beli bahan <b class="text-blue-400">${b.kategori}</b> senilai <b class="text-emerald-400">${fRupiah(b.harga)}</b> di <b>${b.toko}</b>.</span>
+                           </div>`
+                });
+            });
+
+            // 2. Batako Keluar
+            dataPenjualan.forEach(j => {
+                listLaporan.push({
+                    tanggal: j.tanggal,
+                    html: `<div class="p-3 bg-emerald-950/40 border-l-4 border-emerald-500 rounded-r-xl text-xs flex justify-between items-center">
+                            <span>📅 <b class="font-mono text-slate-400">${j.tanggal}</b> &nbsp;|&nbsp; <span class="bg-emerald-900 text-emerald-200 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase">BATAKO KELUAR</span> &rarr; Penjualan batako keluar sebanyak <b class="text-emerald-400">${j.qty.toLocaleString('id-ID')} biji</b>, Omzet masuk: <b class="text-emerald-400">${fRupiah(j.total)}</b>.</span>
+                           </div>`
+                });
+            });
+
+            // 3. Data Karyawan
+            dataKaryawan.forEach(k => {
+                // Cetakan
+                k.riwayatCetak.forEach(c => {
+                    listLaporan.push({
+                        tanggal: c.tanggal,
+                        html: `<div class="p-3 bg-amber-950/40 border-l-4 border-amber-500 rounded-r-xl text-xs flex justify-between items-center">
+                                <span>📅 <b class="font-mono text-slate-400">${c.tanggal}</b> &nbsp;|&nbsp; <span class="bg-amber-900 text-amber-200 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase">CETAK BATAKO</span> &rarr; Karyawan <b>${k.nama}</b> menyetor produksi <b class="text-amber-400">${c.qty.toLocaleString('id-ID')} biji</b>. Upah cetak: <b class="text-emerald-400">${fRupiah(c.totalGaji)}</b>.</span>
+                               </div>`
+                    });
+                });
+
+                // Kasbon
+                k.riwayatCicilan.forEach(cb => {
+                    let tipeBadge = "";
+                    let detailTeks = "";
+                    
+                    if(cb.ket === "Bon Baru") {
+                        tipeBadge = `<span class="bg-rose-900 text-rose-200 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase">KASBON BARU</span>`;
+                        detailTeks = `Karyawan <b>${k.nama}</b> melakukan kasbon baru sebesar <b class="text-rose-400">${fRupiah(Math.abs(cb.cicilan))}</b>.`;
+                    } else if(cb.ket === "Cicilan") {
+                        tipeBadge = `<span class="bg-indigo-900 text-indigo-200 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase">CICILAN</span>`;
+                        detailTeks = `Karyawan <b>${k.nama}</b> bayar cicilan kasbon sebesar <b class="text-indigo-400">${fRupiah(Math.abs(cb.cicilan))}</b>.`;
+                    } else if(cb.ket === "LUNAS") {
+                        tipeBadge = `<span class="bg-teal-900 text-teal-200 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase">LUNAS</span>`;
+                        detailTeks = `Karyawan <b>${k.nama}</b> melunasi seluruh kasbon berjalan sebesar <b class="text-teal-400">${fRupiah(Math.abs(cb.cicilan))}</b>.`;
+                    }
+
+                    listLaporan.push({
+                        tanggal: cb.tanggal,
+                        html: `<div class="p-3 bg-slate-900 border-l-4 border-slate-500 rounded-r-xl text-xs flex justify-between items-center">
+                                <span>📅 <b class="font-mono text-slate-400">${cb.tanggal}</b> &nbsp;|&nbsp; ${tipeBadge} &rarr; ${detailTeks}</span>
+                               </div>`
+                    });
+                });
+            });
+
+            listLaporan.sort((a, b) => new Date(b.tanggal) - new Date(a.tanggal));
+
+            let container = document.getElementById('timeline-laporan-global');
+            container.innerHTML = "";
+            
+            if(listLaporan.length === 0) {
+                container.innerHTML = `<p class="text-slate-600 italic text-center py-8">Belum ada riwayat aktivitas yang dicatat.</p>`;
+                return;
+            }
+
+            listLaporan.forEach(item => {
+                container.innerHTML += item.html;
+            });
+        }
+
+        function renderLaporanTerpadu(modal, penjualan) {
+            let totalGajiEstimasi = 0; 
+            dataKaryawan.forEach(k => { 
+                k.riwayatCetak.forEach(c => {
+                    totalGajiEstimasi += (c.totalGaji || (c.qty * (c.tarif || 1000)));
+                });
+            });
+            let totalKasbonBerjalan = dataKaryawan.reduce((a, b) => a + b.kasbon, 0);
+        }
+
+        // FUNGSI EXPORT KE FORMAT CSV UNTUK GOOGLE SHEETS & EXCEL
+        function eksporKeGoogleSheetsCSV() {
+            let csvContent = "data:text/csv;charset=utf-8,";
+            
+            csvContent += "--- LAPORAN RIWAYAT PEMBELIAN BAHAN BAKU ---\n";
+            csvContent += "Tanggal,Kategori,Harga (Rp),Toko/Keterangan\n";
+            dataPembelianBahan.forEach(b => {
+                csvContent += `${b.tanggal},${b.kategori},${b.harga},"${b.toko}"\n`;
+            });
+            csvContent += "\n";
+
+            csvContent += "--- DATA RINGKASAN KARYAWAN ---\n";
+            csvContent += "Nama Karyawan,Total Hasil Cetak (Biji),Sisa Kasbon Aktif (Rp)\n";
+            dataKaryawan.forEach(k => {
+                csvContent += `"${k.nama}",${k.totalCetak},${k.kasbon}\n`;
+            });
+            csvContent += "\n";
+
+            csvContent += "--- DETAIL RIWAYAT PRODUKSI MASUK ---\n";
+            csvContent += "Tanggal,Nama Karyawan,Jumlah Cetak (Biji),Upah Diterima (Rp)\n";
+            dataKaryawan.forEach(k => {
+                k.riwayatCetak.forEach(c => {
+                    csvContent += `${c.tanggal},"${k.nama}",${c.qty},${c.totalGaji}\n`;
+                });
+            });
+            csvContent += "\n";
+
+            csvContent += "--- DETAIL RIWAYAT BATAKO KELUAR ---\n";
+            csvContent += "Tanggal,Jumlah Keluar (Biji),Harga Per Biji (Rp),Total Omzet (Rp)\n";
+            dataPenjualan.forEach(j => {
+                csvContent += `${j.tanggal},${j.qty},${j.harga},${j.total}\n`;
+            });
+
+            let encodedUri = encodeURI(csvContent);
+            let link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "EXPORT_TB_BERKAH_UTAMA_" + new Date().toISOString().split('T')[0] + ".csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        setInterval(() => {
+            document.getElementById('current-time').innerText = new Date().toTimeString().split(' ')[0];
+        }, 1000);
+
+        window.onload = function() {
+            muatDariLocalStorage();
+            setHariIni();
+            updateDefaultHargaBahan();
+            hitungMekanismeOtomatis();
+        };
+    </script>
+</body>
+</html>
+
+```
